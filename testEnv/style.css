@@ -1,0 +1,39 @@
+
+:root{
+    --border: solid black 1px;
+}
+
+body {
+    margin: auto;
+}
+
+.container {
+    background-color: grey;
+    width:100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: var(--border);
+    aspect-ratio: 1;
+}
+
+.cell p {
+    /* font-size: 2rem; */
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(10, 50px);
+    /* grid-template-columns: repeat(auto-fill, 100px); */
+    /* width:600px;
+    height: 600px; */
+    border: var(--border);
+    border-collapse: collapse;
+}
