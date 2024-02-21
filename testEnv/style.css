@@ -1,6 +1,7 @@
 
 :root{
     --border: solid black 1px;
+    --cell-size:50px;
 }
 
 body {
@@ -16,6 +17,32 @@ body {
     align-items: center;
 }
 
+.shipbar {
+    background-color: lightgray;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin:10px;
+    padding:10px;
+}
+
+.shipbar > .text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 280px;
+    height:60px;
+    background-color: pink;
+    margin:5px;
+    border: var(--border);
+    font-size: 3rem;
+}
+
+.shipbar .ship{
+    margin:2px;
+}
+
 .cell {
     display: flex;
     justify-content: center;
@@ -26,9 +53,24 @@ body {
     user-select: none;
 }
 
+.ship {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: var(--border);
+    height: calc(var(--cell-size) - 6px);
+    background-color: aquamarine;
+    border-radius: 15px;
+    font-size: 1rem;
+    user-select: none;
+}
+.ship.rotated {
+    transform: rotate(90deg);
+}
+
 .grid {
     display: grid;
-    grid-template-columns: repeat(10, 50px);
+    grid-template-columns: repeat(10, var(--cell-size));
     /* grid-template-columns: repeat(auto-fill, 100px); */
     /* width:600px;
     height: 600px; */
