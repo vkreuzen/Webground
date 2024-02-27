@@ -45,24 +45,41 @@ body {
 
 .cell {
     display: flex;
-    justify-content: center;
-    align-items: center;
     border: var(--border);
     aspect-ratio: 1;
     font-size: 2rem;
     user-select: none;
 }
+.heading {
+    background-color: rgba(0,250,250,.7);
+    justify-content: center;
+    align-items: center;
+}
+
 
 .ship {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: var(--border);
-    height: calc(var(--cell-size) - 6px);
-    background-color: aquamarine;
-    border-radius: 15px;
+    /* border: var(--border); */
+    /* height: var(--cell-size); */
     font-size: 1rem;
     user-select: none;
+    z-index:1;
+    .cell {        
+        width:calc(var(--cell-size) - 6px);      
+        overflow:hidden;
+        /* padding-left:3px; */
+        margin-right: 3px;
+        margin-left: 3px;
+        background-color: aquamarine;
+    }
+    .cell.left{
+        border-radius: 15px 0 0 15px;
+    }
+    .cell.right{
+        border-radius: 0 15px 15px 0;
+    }
 }
 .ship.rotated {
     transform: rotate(90deg);

@@ -5,5 +5,5 @@ window.onload = (event) => {
 
   let grid = new Grid(10);
 
-  console.log(grid.getRandomCell(grid));
+  // console.log(grid.getRandomCell(grid));
 }
