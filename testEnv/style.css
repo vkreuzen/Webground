@@ -70,7 +70,6 @@ body {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(10, var(--cell-size));
     /* grid-template-columns: repeat(auto-fill, 100px); */
     /* width:600px;
     height: 600px; */

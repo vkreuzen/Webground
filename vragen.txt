@@ -1,3 +1,1 @@
-6. parseint of number gebruiken of van string decimaal te maken?
-
 8. data opslag in html object voor welke foto volgende/vorige is. goed of anders aanpakken?
