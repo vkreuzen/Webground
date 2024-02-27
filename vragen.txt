@@ -1,11 +1,3 @@
-1. Strict mode gebruik ik nu omdat ik met modules werk. Wat vinden we van strict mode? En wanneer ik geen modules gebruik?
-
-2. als ik const cookie in mn for loop do ipv alleen cookie, wordt ie niet impliciet als global gedeclareerd (toch?). mn editor ziet dan ook ineens dat t niet any is maar string. Hoe zit dat?
-
-3. altijd defer of async aangeven bij script includes?
-
-4. is het logisch om nog rekening te houden met wanneer JS uit staat? zo ja: hoe precies?
-
-5. ik gebruik een document.onclick() om elke click die niet op het menu is het menu weer dicht te laten klappen. de clicks op het menu stoppen de e.propogation. is dit de juiste aanpak?
-
 6. parseint of number gebruiken of van string decimaal te maken?
+
+8. data opslag in html object voor welke foto volgende/vorige is. goed of anders aanpakken?
