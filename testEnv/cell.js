@@ -25,9 +25,14 @@ export class Cell {
     this.element.addEventListener("drop", e => {
       e.preventDefault();
       let data = e.dataTransfer.getData("text");
-      console.log(this.canDrop(board.getShipById(data), 2));
-      e.target.appendChild(document.getElementById(data));
-      board.getShipById(data).removeEventListener();
+      let component = e.dataTransfer.getData("originalTarget");
+
+      console.log(Number(component.charAt(component.length - 1)));
+
+      if (this.canDrop(board.getShipById(data), Number(component.charAt(component.length - 1)) + 1)) {
+        e.target.appendChild(document.getElementById(data));
+        board.getShipById(data).removeEventListener();
+      }
     });
   }
 
@@ -45,17 +50,15 @@ export class Cell {
     console.log(ship);
     //verify left side
     for (let i = 1; i < dragNr; i++) {
-      console.log(i+': '+(this.x - i) + ', '+ this.y);
-      if (!this.board.inBounds(this.x - i, this.y)) {
+      if (!this.board.inBounds((ship.rotated ? this.x - i : this.x), (ship.rotated ? this.y : this.y - i))) {
         return false;
       }
     }
     //no need to verify dragNr
 
     //verify right side
-    for (let i = 1; i <= ship.length-dragNr; i++) {
-      console.log(i+': '+(this.x + i) + ', '+ this.y);
-      if (!this.board.inBounds(this.x + i, this.y)) {
+    for (let i = 1; i <= ship.length - dragNr; i++) {
+      if (!this.board.inBounds((ship.rotated ? this.x + i : this.x), (ship.rotated ? this.y : this.y + i))) {
         return false;
       }
     }

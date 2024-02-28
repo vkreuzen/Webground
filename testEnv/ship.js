@@ -22,6 +22,7 @@ export class Ship {
       if (i == this.length-1) {
         component.classList.add('right');
       }
+      component.id = this.id+'-'+i;
       this.components[i] = component;
       this.element.appendChild(component);
     }
@@ -33,6 +34,7 @@ export class Ship {
 
     this.element.addEventListener("dragstart", e => {
       e.dataTransfer.setData("text", e.target.id);
+      e.dataTransfer.setData("originalTarget", e.explicitOriginalTarget.id);
       console.log(e.explicitOriginalTarget);
     });
     this.element.addEventListener("contextmenu", e => this.rotate(e));
