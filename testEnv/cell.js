@@ -27,10 +27,11 @@ export class Cell {
       let data = e.dataTransfer.getData("text");
       let component = e.dataTransfer.getData("originalTarget");
 
-      console.log(Number(component.charAt(component.length - 1)));
-
       if (this.canDrop(board.getShipById(data), Number(component.charAt(component.length - 1)) + 1)) {
-        e.target.appendChild(document.getElementById(data));
+        // e.target.appendChild(document.getElementById(data));
+
+        this.drop(board.getShipById(data), Number(component.charAt(component.length - 1)) + 1)
+
         board.getShipById(data).removeEventListener();
       }
     });
@@ -47,22 +48,24 @@ export class Cell {
   // VERTICAL!
   //cell is where dragged ship has been dropped, dragnr is the nr of the cell of the ship selected for dragging
   canDrop(ship, dragNr) {
+    console.log(dragNr);
     console.log(ship);
     //verify left side
-    for (let i = 1; i < dragNr; i++) {
-      if (!this.board.inBounds((ship.rotated ? this.x - i : this.x), (ship.rotated ? this.y : this.y - i))) {
-        return false;
-      }
-    }
-    //no need to verify dragNr
-
-    //verify right side
-    for (let i = 1; i <= ship.length - dragNr; i++) {
+    for (let i = 1 - dragNr; i <= ship.length - dragNr; i++) {
       if (!this.board.inBounds((ship.rotated ? this.x + i : this.x), (ship.rotated ? this.y : this.y + i))) {
         return false;
       }
     }
     return true;
+  }
+
+  drop(ship, dragNr) {
+    for (let i = 1 - dragNr; i <= ship.length - dragNr; i++) {
+      console.log((ship.rotated ? this.x + i : this.x), (ship.rotated ? this.y : this.y + i));
+
+      this.board.grid[(ship.rotated ? this.x + i : this.x)][(ship.rotated ? this.y : this.y + i)].element.appendChild(ship.components[i]);
+
+    }
   }
 
 }

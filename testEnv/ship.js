@@ -16,13 +16,14 @@ export class Ship {
     for (let i = 0; i < this.length; i++) {
       let component = document.createElement('div');
       component.classList.add('cell');
+      component.classList.add('shipcell');
       if (i == 0) {
         component.classList.add('left');
       }
       if (i == this.length-1) {
         component.classList.add('right');
       }
-      component.id = this.id+'-'+i;
+      component.id = this.id+'-'+(i+1);
       this.components[i] = component;
       this.element.appendChild(component);
     }
@@ -44,9 +45,15 @@ export class Ship {
       e.preventDefault();
       if (!this.rotated) {
         this.element.classList.add('rotated');
+        for (let i = 0; i < this.length; i++) {
+          this.components[i].classList.add('rotated');
+        }
       }
       else {
         this.element.classList.remove('rotated');
+        for (let i = 0; i < this.length; i++) {
+          this.components[i].classList.remove('rotated');
+        }
       }
       this.rotated = !this.rotated;
   }
