@@ -7,13 +7,26 @@ export class Grid {
     gridElement;
     grid;
     ships;
+    shipBar;
+    playerBoard;
+    myTurn;
+    setStatus;
+    nrOfPlacedShips;
 
-    constructor(size) {
+    constructor(size, playerBoard, myTurn, setStatus) {
         this.size = size;
-        this.container = document.querySelector('.container');
+        this.playerBoard = playerBoard;
+        this.myTurn = myTurn;
+        this.setStatus = setStatus;
+        this.container = document.createElement('div');
+        this.container.classList.add('board');
+        document.querySelector('.container').appendChild(this.container);
         this.gridElement = document.createElement('div');
         this.initialiseGrid();
-        this.initialiseShips();
+        if (this.playerBoard) {
+            this.initialiseShips();
+            this.container.classList.add('enabled');
+        }
     }
 
     initialiseGrid() {
@@ -56,35 +69,71 @@ export class Grid {
 
         }
         this.container.appendChild(this.gridElement);
+
+        // TEMP
+
+
+        this.ships = [];
+
+        if (!this.playerBoard) {
+
+            let ship = new Ship(0, 'testShip', 4);
+            this.grid[4][4].drop(ship, 2);
+            this.ships.push(ship);
+
+            ship = new Ship(1, 'testShip Again', 3);
+            this.grid[8][8].drop(ship, 3);
+            this.ships.push(ship);
+        }
+
+        this.nrOfPlacedShips = 2;
+
+        // TEMP
     }
 
     initialiseShips() {
         this.ships = [];
-        const shipBar = document.createElement('div');
-        shipBar.classList.add('shipbar');
+        this.shipBar = document.createElement('div');
+        this.shipBar.classList.add('shipbar');
         const text = document.createElement('div');
         text.classList.add('text');
         text.innerHTML = 'Ship Bar'
-        shipBar.appendChild(text);
+        this.shipBar.appendChild(text);
+        const button = document.createElement('button');
+        button.innerText = 'Reset Ships';
+        button.addEventListener("click", e => this.resetShips());
+        this.shipBar.appendChild(button);
 
-        let patrouille = new Ship(0,'patrouilleschip', 2);
-        this.ships.push(patrouille);
-        shipBar.appendChild(patrouille.element);
-        let duikboot = new Ship(1,'duikboot', 3);
-        this.ships.push(duikboot);
-        shipBar.appendChild(duikboot.element);
-        let torpedo = new Ship(2,'torpedojager', 3);
-        this.ships.push(torpedo);
-        shipBar.appendChild(torpedo.element);
-        let slagschip = new Ship(3,'slagschip', 4);
-        this.ships.push(slagschip);
-        shipBar.appendChild(slagschip.element);
-        let vliegdekschip = new Ship(4,'vliegdekschip', 5);
-        this.ships.push(vliegdekschip);
-        shipBar.appendChild(vliegdekschip.element);
+        const shipList = [[4, 'patrouilleschip', 2],
+        [3, 'torpedojager', 3],
+        [2, 'slagschip', 4],
+        [1, 'vliegdekschip', 6]];
 
-        this.container.append(shipBar);
+        let id = 0;
 
+        for (let s = 0; s < shipList.length; s++) {
+            for (let i = 0; i < shipList[s][0]; i++) {
+                let ship = new Ship(id, shipList[s][1], shipList[s][2]);
+                this.ships.push(ship);
+                this.shipBar.appendChild(ship.element);
+                id++;
+            }
+        }
+
+        this.container.append(this.shipBar);
+        this.nrOfPlacedShips = 0;
+    }
+
+    resetShips() {
+        this.ships.forEach(ship => {
+            ship.resetShip();
+            this.shipBar.appendChild(ship.element);
+        });
+        this.grid.forEach(row => {
+            row.forEach(cell => {
+                cell.empty = true;
+            })
+        })
     }
 
     getRandomCell(board) {
@@ -95,7 +144,58 @@ export class Grid {
         return (x >= 1 && y >= 1 && x <= this.size && y <= this.size);
     }
 
+    canDrop(x, y) {
+        if (!this.inBounds(x, y)) {
+            return false;
+        }
+        for (let i = -1; i < 2; i++) {
+            for (let j = -1; j < 2; j++) {
+                if (this.inBounds(x + i, y + j)) {
+                    if (!this.grid[x + i][y + j].empty) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     getShipById = (id) => {
         return this.ships[id];
+    }
+
+    checkSunkAllShips() {
+        let sunkenShips = 0;
+        this.ships.forEach(ship => {
+            if (ship.sunk) {
+                sunkenShips++;
+            }
+        });
+        if (sunkenShips == this.ships.length) {
+            this.setStatus('WINNER!');
+        }
+    }
+
+    placeShip(ship, dragNr, x, y) {
+        for (let i = 0 - dragNr; i < ship.length - dragNr; i++) {
+            const cell = this.grid[(ship.rotated ? x + i : x)][(ship.rotated ? y : y + i)];
+            cell.element.appendChild(ship.components[i + dragNr]);
+            cell.empty = false;
+        }
+        this.checkPlacedAllShips();
+    }
+
+    checkPlacedAllShips() {
+        if (this.playerBoard) {
+            this.nrOfPlacedShips++;
+            if(this.nrOfPlacedShips == this.ships.length){
+                console.log('placed all ships');
+            }
+        }
+    }
+
+    endTurn() {
+        console.log('ending turn');
+        this.myTurn = false;
     }
 }

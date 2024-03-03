@@ -5,54 +5,70 @@ export class Cell {
   shot;
   element;
   board;
+  empty;
 
   constructor(x, y, board) {
     this.x = x;
     this.y = y;
     this.shot = false;
     this.board = board;
+    this.empty = true;
 
     this.element = document.createElement('div');
     this.element.classList.add('cell');
 
-    this.element.onclick = e => {
-      this.shoot();
-    };
+    if (!this.board.playerBoard) {
+      this.element.onclick = e => {
+        if (this.board.myTurn) {
+          this.shoot();
+        }
+      };
+    }
+    else {
+      this.element.addEventListener("dragover", e => {
+        if (this.board.myTurn) {
+          e.preventDefault();
+        }
+      });
+      this.element.addEventListener("drop", e => {
+        if (this.board.myTurn) {
+          e.preventDefault();
+          let data = e.dataTransfer.getData("text");
+          let component = e.dataTransfer.getData("originalTarget");
 
-    this.element.addEventListener("dragover", e => {
-      e.preventDefault();
-    });
-    this.element.addEventListener("drop", e => {
-      e.preventDefault();
-      let data = e.dataTransfer.getData("text");
-      let component = e.dataTransfer.getData("originalTarget");
-
-      if (this.canDrop(board.getShipById(data), Number(component.charAt(component.length - 1)) + 1)) {
-        // e.target.appendChild(document.getElementById(data));
-
-        this.drop(board.getShipById(data), Number(component.charAt(component.length - 1)) + 1)
-
-        board.getShipById(data).removeEventListener();
-      }
-    });
+          this.drop(this.board.getShipById(data), Number(component.charAt(component.length - 1)) - 1);
+        }
+      });
+    }
   }
 
   shoot() {
     if (!this.shot) {
       this.shot = true;
-      // this.element.innerHTML = `${this.x},${this.y}`;
-      this.element.innerHTML = `&#10060;`;
+      const shot = document.createElement('div');
+      shot.classList.add('shot');
+      shot.innerHTML = `&#10060;`;
+      this.element.appendChild(shot);
+
+      if (!this.empty) {
+        const id = this.element.children[0].id;
+        const shipId = Number(id.substring(0,id.length-2));
+        const dragNr = Number(id.substring(id.indexOf('-'),id.length));
+        this.board.getShipById(shipId).shoot(dragNr);
+        this.board.checkSunkAllShips();
+      }
+
+      console.log('shooting');
+
+      this.board.endTurn();
+
     }
   }
 
-  // VERTICAL!
-  //cell is where dragged ship has been dropped, dragnr is the nr of the cell of the ship selected for dragging
+  //dragnr is the seqnr of the cell of the ship selected for dragging
   canDrop(ship, dragNr) {
-    console.log(dragNr);
-    console.log(ship);
-    //verify left side
-    for (let i = 1 - dragNr; i <= ship.length - dragNr; i++) {
-      if (!this.board.inBounds((ship.rotated ? this.x + i : this.x), (ship.rotated ? this.y : this.y + i))) {
+    for (let i = 0 - dragNr; i < ship.length - dragNr; i++) {
+      if (!this.board.canDrop((ship.rotated ? this.x + i : this.x), (ship.rotated ? this.y : this.y + i))) {
         return false;
       }
     }
@@ -60,12 +76,10 @@ export class Cell {
   }
 
   drop(ship, dragNr) {
-    for (let i = 1 - dragNr; i <= ship.length - dragNr; i++) {
-      console.log((ship.rotated ? this.x + i : this.x), (ship.rotated ? this.y : this.y + i));
-
-      this.board.grid[(ship.rotated ? this.x + i : this.x)][(ship.rotated ? this.y : this.y + i)].element.appendChild(ship.components[i]);
-
+    if (!this.canDrop(ship, dragNr)) {
+      return;
     }
+    this.board.placeShip(ship, dragNr, this.x, this.y);
   }
 
 }
