@@ -86,4 +86,8 @@ export class Ship {
         this.rotated = false;
     }
   }
+
+  getCode(){
+    return this.name.charAt(0);
+  }
 }

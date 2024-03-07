@@ -2,6 +2,7 @@ import { Cell } from './Cell.js';
 import { Ship } from './Ship.js';
 
 export class Grid {
+    game;
     size;
     container;
     gridElement;
@@ -13,7 +14,8 @@ export class Grid {
     setStatus;
     nrOfPlacedShips;
 
-    constructor(size, playerBoard, myTurn, setStatus) {
+    constructor(game, size, playerBoard, myTurn, setStatus) {
+        this.game = game;
         this.size = size;
         this.playerBoard = playerBoard;
         this.myTurn = myTurn;
@@ -99,13 +101,20 @@ export class Grid {
         text.classList.add('text');
         text.innerHTML = 'Ship Bar'
         this.shipBar.appendChild(text);
-        const button = document.createElement('button');
-        button.innerText = 'Reset Ships';
-        button.addEventListener("click", e => this.resetShips());
-        this.shipBar.appendChild(button);
+        const resetButton = document.createElement('button');
+        resetButton.innerText = 'Reset Ships';
+        resetButton.addEventListener("click", e => this.resetShips());
+        this.shipBar.appendChild(resetButton);
+        
+        const submitButton = document.createElement('button');
+        submitButton.id = "submitShips";
+        submitButton.classList.add('hidden');
+        submitButton.innerText = 'Submit Ships';
+        submitButton.addEventListener("click", e => this.submitShips());
+        this.shipBar.appendChild(submitButton);
 
         const shipList = [[4, 'patrouilleschip', 2],
-        [3, 'torpedojager', 3],
+        [3, 'onderzeeer', 3],
         [2, 'slagschip', 4],
         [1, 'vliegdekschip', 6]];
 
@@ -131,9 +140,25 @@ export class Grid {
         });
         this.grid.forEach(row => {
             row.forEach(cell => {
-                cell.empty = true;
+                cell.ship = null;
             })
         })
+    }
+
+    submitShips(){
+        let submission = [];
+
+        for (let x = 1; x <= this.size; x++) {
+            submission[x-1] = []
+            for (let y = 1; y <= this.size; y++) {
+                submission[x-1][y-1] = this.grid[x][y].ship?.getCode() ?? 0;
+            }
+        }
+
+        console.log(submission);
+
+        console.log(this.game.submitBoard(submission));
+        this.hideShipBar();
     }
 
     getRandomCell(board) {
@@ -151,7 +176,7 @@ export class Grid {
         for (let i = -1; i < 2; i++) {
             for (let j = -1; j < 2; j++) {
                 if (this.inBounds(x + i, y + j)) {
-                    if (!this.grid[x + i][y + j].empty) {
+                    if (!this.grid[x + i][y + j].isEmpty()) {
                         return false;
                     }
                 }
@@ -180,7 +205,7 @@ export class Grid {
         for (let i = 0 - dragNr; i < ship.length - dragNr; i++) {
             const cell = this.grid[(ship.rotated ? x + i : x)][(ship.rotated ? y : y + i)];
             cell.element.appendChild(ship.components[i + dragNr]);
-            cell.empty = false;
+            cell.ship = ship;
         }
         this.checkPlacedAllShips();
     }
@@ -188,8 +213,8 @@ export class Grid {
     checkPlacedAllShips() {
         if (this.playerBoard) {
             this.nrOfPlacedShips++;
-            if(this.nrOfPlacedShips == this.ships.length){
-                console.log('placed all ships');
+            if(this.nrOfPlacedShips >= 2){//}== this.ships.length){
+                document.getElementById('submitShips').classList.remove('hidden');
             }
         }
     }
@@ -197,5 +222,17 @@ export class Grid {
     endTurn() {
         console.log('ending turn');
         this.myTurn = false;
+    }
+
+    hideShipBar(){
+        this.shipBar.classList.add('hidden');
+    }
+
+    hide(){
+        this.container.classList.add('hidden');
+    }
+
+    show(){
+        this.container.classList.remove('hidden');
     }
 }

@@ -5,14 +5,14 @@ export class Cell {
   shot;
   element;
   board;
-  empty;
+  ship;
 
   constructor(x, y, board) {
     this.x = x;
     this.y = y;
     this.shot = false;
     this.board = board;
-    this.empty = true;
+    this.ship = null;
 
     this.element = document.createElement('div');
     this.element.classList.add('cell');
@@ -50,7 +50,7 @@ export class Cell {
       shot.innerHTML = `&#10060;`;
       this.element.appendChild(shot);
 
-      if (!this.empty) {
+      if (!this.isEmpty) {
         const id = this.element.children[0].id;
         const shipId = Number(id.substring(0,id.length-2));
         const dragNr = Number(id.substring(id.indexOf('-'),id.length));
@@ -58,9 +58,9 @@ export class Cell {
         this.board.checkSunkAllShips();
       }
 
-      console.log('shooting');
+      // this.board.game.shoot(this.x,this.y);
 
-      this.board.endTurn();
+      // this.board.endTurn();
 
     }
   }
@@ -80,6 +80,10 @@ export class Cell {
       return;
     }
     this.board.placeShip(ship, dragNr, this.x, this.y);
+  }
+
+  isEmpty(){
+    return (this.ship == null);
   }
 
 }
