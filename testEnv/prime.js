@@ -1,89 +1,99 @@
 import { Grid } from './Grid.js';
-import { Game } from './Game.js';
+import { GameAPI } from './GameAPI.js';
 
-let game = new Game();
+let gameAPI = new GameAPI();
 
 window.onload = (event) => {
 
-  document.getElementById('newgame').addEventListener("click", e =>{
-    game.playerName = document.getElementById('playername').value;
-    game.submitAIGame();
-  });
+  let game = new Game();
 
-  runGame();
+  game.runGame();
 
 }
 
-async function runGame() {
+class Game {
 
-  document.querySelector('.container').classList.add('hidden');
+  myTurn;
+  grid;
+  opponentGrid;
 
-  makeList(document.querySelector('.games table'));
+  async runGame() {
 
+    document.querySelector('.container').classList.add('hidden');
 
-  let myTurn = true;
+    this.makeList(document.querySelector('.games table'));
 
-  function setStatus(text) {
-    status.innerHTML = text;
-  }
+    this.myTurn = true;
 
-  let grid = new Grid(game, 10, true, e => { return myTurn }, setStatus);
+    function setStatus(text) {
+      status.innerHTML = text;
+    }
 
-  let opponentGrid = new Grid(game, 10, false, e => { return myTurn }, setStatus);
-  // opponentGrid.hide();
+    this.grid = new Grid(gameAPI, 10, true, e => { return this.myTurn }, setStatus);
 
-  let status = document.createElement('div');
-  status.classList.add('status');
+    this.opponentGrid = new Grid(gameAPI, 10, false, e => { return this.myTurn }, setStatus);
+    // opponentGrid.hide();
 
-  document.querySelector('.container').appendChild(status);
-}
+    let status = document.createElement('div');
+    status.classList.add('status');
 
-async function switchToGame(id, player1, player2){
+    document.querySelector('.container').appendChild(status);
 
-  game.gameId = id;
-  game.playerName = player1;
-  console.log(id);
-  console.log(player1);
-
-  let spel = await (await (game.getGame()));
-  if(spel.state == 'playing'){
-    let board = await ( await (game.getBoard(player2)));
-    console.log(board);
-  }
-
-  document.querySelector('.container').classList.remove('hidden');
-  document.querySelector('.games').classList.add('hidden');
-}
-
-
-async function makeList(container) {
-
-  let games = await (await (game.getAllGames()));
-
-  let i = 1;
-  games.forEach(spel => {
-    let row = document.createElement('tr');
-    let td = document.createElement('td');
-    td.innerHTML = spel.player1;
-    row.appendChild(td);
-    td = document.createElement('td');
-    td.innerHTML = spel.player2;
-    row.appendChild(td);
-    td = document.createElement('td');
-    td.innerHTML = spel.id;
-    row.appendChild(td);
-
-    let button = document.createElement('button');
-    button.innerText = 'play';
-    button.addEventListener("click", e => {
-      console.log(spel);
-      switchToGame(spel.id,spel.player1,spel.player2);
+    document.getElementById('newgame').addEventListener("click", e => {
+      gameAPI.playerName = document.getElementById('playername').value;
+      gameAPI.submitAIGame();
     });
-    
-    td = document.createElement('td');
-    td.appendChild(button);
-    row.appendChild(td);
+  }
 
-    container.appendChild(row);
-  });
+  async switchToGame(id, player1, player2) {
+
+    gameAPI.gameId = id;
+    gameAPI.playerName = player1;
+
+    let spel = await (await (gameAPI.getGame()));
+    if (spel.state == 'playing') {
+      let board = await (await (gameAPI.getBoard(player1)));
+      this.grid.readBoard(board);
+      this.grid.readShots(spel.player2Shots);
+
+      board = await (await (gameAPI.getBoard(player2)));
+      this.opponentGrid.readBoard(board);
+      this.opponentGrid.readShots(spel.player1Shots);
+    }
+
+    document.querySelector('.container').classList.remove('hidden');
+    document.querySelector('.games').classList.add('hidden');
+  }
+
+  async makeList(container) {
+
+    let games = await (await (gameAPI.getAllGames()));
+
+    let i = 1;
+    games.forEach(spel => {
+      let row = document.createElement('tr');
+      let td = document.createElement('td');
+      td.innerHTML = spel.player1;
+      row.appendChild(td);
+      td = document.createElement('td');
+      td.innerHTML = spel.player2;
+      row.appendChild(td);
+      td = document.createElement('td');
+      td.innerHTML = spel.id;
+      row.appendChild(td);
+
+      let button = document.createElement('button');
+      button.innerText = 'play';
+      button.addEventListener("click", e => {
+        console.log(spel);
+        this.switchToGame(spel.id, spel.player1, spel.player2);
+      });
+
+      td = document.createElement('td');
+      td.appendChild(button);
+      row.appendChild(td);
+
+      container.appendChild(row);
+    });
+  }
 }

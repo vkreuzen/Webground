@@ -71,26 +71,6 @@ export class Grid {
 
         }
         this.container.appendChild(this.gridElement);
-
-        // TEMP
-
-
-        this.ships = [];
-
-        if (!this.playerBoard) {
-
-            let ship = new Ship(0, 'testShip', 4);
-            this.grid[4][4].drop(ship, 2);
-            this.ships.push(ship);
-
-            ship = new Ship(1, 'testShip Again', 3);
-            this.grid[8][8].drop(ship, 3);
-            this.ships.push(ship);
-        }
-
-        this.nrOfPlacedShips = 2;
-
-        // TEMP
     }
 
     initialiseShips() {
@@ -105,7 +85,7 @@ export class Grid {
         resetButton.innerText = 'Reset Ships';
         resetButton.addEventListener("click", e => this.resetShips());
         this.shipBar.appendChild(resetButton);
-        
+
         const submitButton = document.createElement('button');
         submitButton.id = "submitShips";
         submitButton.classList.add('hidden');
@@ -145,13 +125,13 @@ export class Grid {
         })
     }
 
-    submitShips(){
+    submitShips() {
         let submission = [];
 
         for (let x = 1; x <= this.size; x++) {
-            submission[x-1] = []
+            submission[x - 1] = []
             for (let y = 1; y <= this.size; y++) {
-                submission[x-1][y-1] = this.grid[x][y].ship?.getCode() ?? 0;
+                submission[x - 1][y - 1] = this.grid[x][y].ship?.getCode() ?? 0;
             }
         }
 
@@ -210,10 +190,35 @@ export class Grid {
         this.checkPlacedAllShips();
     }
 
+    readBoard(board) {
+        this.hideShipBar();
+        console.log(board);
+        for (let x = 1; x < board.length + 1; x++) {
+            for (let y = 1; y < board[x - 1].length + 1; y++) {
+                if (board[x-1][y-1] != 0) {
+
+                    let component = document.createElement('div');
+                    component.classList.add('cell');
+                    component.classList.add('shipcell');
+                    component.id = x + ',' + y;
+
+                    this.grid[x][y].element.appendChild(component);
+                }
+            }
+        }
+    }
+
+    readShots(shots){
+        console.log(shots);
+        shots.forEach(shot => {
+            this.grid[parseInt(shot.x+1)][parseInt(shot.y+1)].readShot();
+        });
+    }
+
     checkPlacedAllShips() {
         if (this.playerBoard) {
             this.nrOfPlacedShips++;
-            if(this.nrOfPlacedShips >= 2){//}== this.ships.length){
+            if (this.nrOfPlacedShips == this.ships.length) {
                 document.getElementById('submitShips').classList.remove('hidden');
             }
         }
@@ -224,15 +229,15 @@ export class Grid {
         this.myTurn = false;
     }
 
-    hideShipBar(){
-        this.shipBar.classList.add('hidden');
+    hideShipBar() {
+        this.shipBar?.classList.add('hidden');
     }
 
-    hide(){
+    hide() {
         this.container.classList.add('hidden');
     }
 
-    show(){
+    show() {
         this.container.classList.remove('hidden');
     }
 }

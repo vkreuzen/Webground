@@ -42,6 +42,14 @@ export class Cell {
     }
   }
 
+  readShot(){
+    this.shot = true;
+      const shot = document.createElement('div');
+      shot.classList.add('shot');
+      shot.innerHTML = `&#10060;`;
+      this.element.appendChild(shot);
+  }
+
   shoot() {
     if (!this.shot) {
       this.shot = true;
@@ -58,7 +66,8 @@ export class Cell {
         this.board.checkSunkAllShips();
       }
 
-      // this.board.game.shoot(this.x,this.y);
+      let result = this.board.game.shoot(this.x-1,this.y-1);
+      console.log(result);
 
       // this.board.endTurn();
 

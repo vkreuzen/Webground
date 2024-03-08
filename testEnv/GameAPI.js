@@ -1,4 +1,4 @@
-export class Game {
+export class GameAPI {
     host = "https://avans-webdev-zeeslag.azurewebsites.net";
     gameId;
     playerName;
@@ -28,6 +28,7 @@ export class Game {
     }
 
     async shoot(x, y) {
+        console.log(x+','+y)
         return await (await this.send_post(`${this.host}/game/${this.gameId}/player/${this.playerName}/shot`, {
             "x": x,
             "y": y
