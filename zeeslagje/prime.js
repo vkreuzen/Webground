@@ -37,6 +37,7 @@ class Game {
 
     this.playerName = (new URLSearchParams(window.location.search)).get('name');
     document.getElementById('playername').value = this.playerName;
+    document.getElementById('mePlayer').innerHTML = this.playerName;
 
     let status = document.createElement('div');
     status.classList.add('status');
@@ -52,6 +53,12 @@ class Game {
       this.playerName = document.getElementById('playername').value;
       gameAPI.playerName = this.playerName;
       gameAPI.submitAIGame(true).then(e => this.reload());
+    });
+    document.getElementById('swapPlayer').addEventListener("click", e => {
+      this.playerName = document.getElementById('playername').value;
+      console.log(this.playerName);
+      gameAPI.playerName = this.playerName;
+      this.reload();
     });
   }
 

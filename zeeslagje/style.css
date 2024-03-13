@@ -31,6 +31,15 @@ body {
     font-size: 3rem;
     background-color: bisque;
 }
+#mePlayer{
+    &::before{
+        content:'You are: ';
+    }
+    text-align: center;
+    font-size: 3rem;
+    background-color: azure;
+    margin:0 5rem;
+}
 
 .container {
     background-color: grey;
