@@ -2,7 +2,8 @@ import { Cell } from './Cell.js';
 import { Ship } from './Ship.js';
 
 export class Grid {
-    game;
+    
+    gameAPI;
     size;
     container;
     gridElement;
@@ -10,15 +11,16 @@ export class Grid {
     ships;
     shipBar;
     playerBoard;
-    myTurn;
+    game;
     setStatus;
     nrOfPlacedShips;
+    label;
 
-    constructor(game, size, playerBoard, myTurn, setStatus) {
-        this.game = game;
+    constructor(gameAPI, size, playerBoard, game, setStatus) {
+        this.gameAPI = gameAPI;
         this.size = size;
         this.playerBoard = playerBoard;
-        this.myTurn = myTurn;
+        this.game = game;
         this.setStatus = setStatus;
         this.container = document.createElement('div');
         this.container.classList.add('board');
@@ -27,8 +29,11 @@ export class Grid {
         this.initialiseGrid();
         if (this.playerBoard) {
             this.initialiseShips();
-            this.container.classList.add('enabled');
+            this.enable();
         }
+        this.label = document.createElement('label');
+        this.label.innerHTML = 'Board';
+        this.container.appendChild(this.label);
     }
 
     initialiseGrid() {
@@ -108,8 +113,7 @@ export class Grid {
                 id++;
             }
         }
-
-        this.container.append(this.shipBar);
+        document.querySelector('.container').appendChild(this.shipBar);
         this.nrOfPlacedShips = 0;
     }
 
@@ -125,19 +129,20 @@ export class Grid {
         })
     }
 
+    async myTurn(){
+        return await (this.gameAPI.myTurn());
+    }
+
     submitShips() {
         let submission = [];
 
         for (let x = 1; x <= this.size; x++) {
             submission[x - 1] = []
             for (let y = 1; y <= this.size; y++) {
-                submission[x - 1][y - 1] = this.grid[x][y].ship?.getCode() ?? 0;
+                submission[x - 1][y - 1] = this.grid[x][y].ship?.getCode() ?? "0";
             }
         }
-
-        console.log(submission);
-
-        console.log(this.game.submitBoard(submission));
+        this.game.submitBoard(submission);
         this.hideShipBar();
     }
 
@@ -190,7 +195,7 @@ export class Grid {
         this.checkPlacedAllShips();
     }
 
-    readBoard(board) {
+    readBoard(board, name) {
         this.hideShipBar();
         console.log(board);
         for (let x = 1; x < board.length + 1; x++) {
@@ -205,13 +210,27 @@ export class Grid {
                     this.grid[x][y].element.appendChild(component);
                 }
             }
+        }        
+        if (this.playerBoard) {
+            this.disable();
         }
+        else{
+            this.enable();
+        }
+        this.label.innerHTML = name;
+    }
+
+    enable(){
+        this.container.classList.add('enabled');
+    }
+    disable(){        
+        this.container.classList.remove('enabled');
     }
 
     readShots(shots){
         console.log(shots);
         shots.forEach(shot => {
-            this.grid[parseInt(shot.x+1)][parseInt(shot.y+1)].readShot();
+            this.grid[parseInt(shot.y+1)][parseInt(shot.x+1)].readShot();
         });
     }
 

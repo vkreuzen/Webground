@@ -19,57 +19,61 @@ export class Cell {
 
     if (!this.board.playerBoard) {
       this.element.onclick = e => {
-        if (this.board.myTurn) {
           this.shoot();
-        }
       };
     }
     else {
       this.element.addEventListener("dragover", e => {
-        if (this.board.myTurn) {
-          e.preventDefault();
-        }
+        e.preventDefault();
       });
       this.element.addEventListener("drop", e => {
-        if (this.board.myTurn) {
-          e.preventDefault();
-          let data = e.dataTransfer.getData("text");
-          let component = e.dataTransfer.getData("originalTarget");
+        e.preventDefault();
+        let data = e.dataTransfer.getData("text");
+        let component = e.dataTransfer.getData("originalTarget");
 
-          this.drop(this.board.getShipById(data), Number(component.charAt(component.length - 1)) - 1);
-        }
+        this.drop(this.board.getShipById(data), Number(component.charAt(component.length - 1)) - 1);
       });
     }
   }
 
-  readShot(){
+  readShot() {
     this.shot = true;
-      const shot = document.createElement('div');
+    let shot = this.element.querySelector('.shot');
+    if(!shot){
+      shot = document.createElement('div');
       shot.classList.add('shot');
-      shot.innerHTML = `&#10060;`;
+      if(this.isEmpty()){
+        shot.innerHTML = `&#x1F5F8;`;
+      }
+      else{
+        shot.innerHTML = `&#10060;`;
+      }
       this.element.appendChild(shot);
+    }
   }
 
-  shoot() {
-    if (!this.shot) {
+  async shoot() {
+    if (await (this.board.myTurn()) && !this.shot) {
       this.shot = true;
       const shot = document.createElement('div');
       shot.classList.add('shot');
-      shot.innerHTML = `&#10060;`;
       this.element.appendChild(shot);
 
       if (!this.isEmpty) {
         const id = this.element.children[0].id;
-        const shipId = Number(id.substring(0,id.length-2));
-        const dragNr = Number(id.substring(id.indexOf('-'),id.length));
+        const shipId = Number(id.substring(0, id.length - 2));
+        const dragNr = Number(id.substring(id.indexOf('-'), id.length));
         this.board.getShipById(shipId).shoot(dragNr);
         this.board.checkSunkAllShips();
       }
 
-      let result = this.board.game.shoot(this.x-1,this.y-1);
-      console.log(result);
-
-      // this.board.endTurn();
+      let result = this.board.gameAPI.shoot(this.x - 1, this.y - 1);      
+      if((await result).hit){
+        shot.innerHTML = `&#10060;`;
+      }
+      else{
+        shot.innerHTML = `&#x1F5F8;`;
+      }
 
     }
   }
@@ -91,8 +95,8 @@ export class Cell {
     this.board.placeShip(ship, dragNr, this.x, this.y);
   }
 
-  isEmpty(){
-    return (this.ship == null);
+  isEmpty() {
+    return (this.ship == null) && !this.element.querySelector('.shipcell');;
   }
 
 }

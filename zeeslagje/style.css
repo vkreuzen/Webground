@@ -23,6 +23,15 @@ body {
     width:80%;
 }
 
+#currentPlayer{
+    &::before{
+        content:'Turn: ';
+    }
+    text-align: center;
+    font-size: 3rem;
+    background-color: bisque;
+}
+
 .container {
     background-color: grey;
     width:100vw;
@@ -34,13 +43,19 @@ body {
     & .board {
         background-color: grey;
         display: flex;
-        flex-direction: row;
+        flex-direction: column-reverse;
         justify-content: center;
         align-items: center;
         margin:10px;
         &.enabled{
             background-color: darkgray;
             order:-1;
+        }
+        & label{
+            font-size: 3rem;
+            background-color: aquamarine;
+            margin:1rem;
+            padding:0 4rem;
         }
     }
 }
@@ -75,6 +90,7 @@ body {
 
 .cell {
     display: flex;
+    justify-content: center;
     position: relative;
     border: var(--border);
     aspect-ratio: 1;
@@ -100,14 +116,10 @@ body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    /* border: var(--border); */
-    /* height: var(--cell-size); */
-    /* font-size: 1rem; */
     overflow:visible;
     user-select: none;
     z-index:1;
     &.rotated {
-        /* transform: rotate(90deg); */
         flex-flow: column nowrap;
         overflow:visible;
     }
@@ -130,18 +142,15 @@ body {
         }
     }
     &.rotated {        
-        /* overflow:hidden; */
-        /* padding-left:3px; */
-        /* margin: 3px 0; */
         background-color: aquamarine;
+    }
+    .enabled &{
+        display:none;
     }
 }
 
 .grid {
     display: grid;
-    /* grid-template-columns: repeat(auto-fill, 100px); */
-    /* width:600px;
-    height: 600px; */
     border: var(--border);
     border-collapse: collapse;
 }
