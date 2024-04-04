@@ -154,7 +154,7 @@ body {
         background-color: aquamarine;
     }
     .enabled &{
-        display:none;
+        /* display:none; */
     }
 }
 

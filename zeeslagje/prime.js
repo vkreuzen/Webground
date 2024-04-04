@@ -120,7 +120,7 @@ class Game {
   }
 
   async submitBoard(submission){
-    this.gameAPI.submitBoard(submission);
+    gameAPI.submitBoard(submission);
   }
 
   async endGame(){    
