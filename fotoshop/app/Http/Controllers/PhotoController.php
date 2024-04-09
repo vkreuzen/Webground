@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PhotoPostRequest;
 use App\Models\Photo;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -36,9 +37,8 @@ class PhotoController extends Controller
     {
         $validated = $request->validated();
 
-        $file = $request->file('file_upload');
-        $fileName = $file->getClientOriginalName();
-        $filePath = $file->store('uploads', 'public');
+        $filepath = $request->file('file_upload')->store('uploads');
+        $validated['filename'] = $filepath;
 
         $request->user()->photos()->create($validated);
 
@@ -87,6 +87,8 @@ class PhotoController extends Controller
         Gate::authorize('delete', $photo);
 
         $photo->delete();
+
+        File::delete($photo->filename);
         
         return redirect(route('photos.index'));
     }

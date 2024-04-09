@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('description');
             $table->date('date');
+            $table->decimal('price',6,2);
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('filename');
             $table->timestamps();

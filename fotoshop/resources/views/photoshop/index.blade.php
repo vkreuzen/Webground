@@ -39,7 +39,7 @@
                                 </x-dropdown>
                             @endif
                         </div>
-                        <div class="max-h-80"><img class="object-contain h-80" src={{"storage/".$photo->filename}} ></div>
+                        <div class="max-h-80"><img class="object-contain h-80" src={{$photo->filename}} ></div>
                         <p class="mt-4 text-lg text-gray-900">{{$photo->description.', op datum: '.$photo->date}}</p>
                     </div>
                 </div>

@@ -23,9 +23,10 @@ class PhotoPostRequest extends FormRequest
     {
         return [
             'description' => 'required',
-            'date' => 'required',
-            'filename' => 'required'
+            'date' => 'required|date',
+            'price' => 'required|decimal:0,2',
             // 'file_upload' => 'required|mimes:pdf,jpg,png|max:32000'
+            'file_upload' => 'required'
         ];
     }
 }
