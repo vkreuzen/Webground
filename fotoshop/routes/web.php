@@ -21,7 +21,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('photos', PhotoController::class)
-    ->only(['index','store','edit','destroy'])
+    ->only(['index','store','edit','update','destroy'])
     ->middleware(['auth', 'verified']);
 
 Route::resource('photoshop', PhotoshopController::class)

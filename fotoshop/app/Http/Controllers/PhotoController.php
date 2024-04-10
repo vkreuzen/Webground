@@ -74,6 +74,10 @@ class PhotoController extends Controller
         Gate::authorize('update', $photo);
         $validated = $request->validated();
 
+        // TODO If isset!!!
+        $filepath = $request->file('file_upload')->store('uploads');
+        $validated['filename'] = $filepath;
+
         $photo->update($validated); 
 
         return redirect(route('photos.index'));

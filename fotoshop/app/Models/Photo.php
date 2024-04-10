@@ -14,6 +14,7 @@ class Photo extends Model
     protected $fillable = [
         'description',
         'date',
+        'price',
         'filename'
     ];
 

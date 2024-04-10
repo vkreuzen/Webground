@@ -40,7 +40,9 @@
                             @endif
                         </div>
                         <div class="max-h-80"><img class="object-contain h-80" src={{$photo->filename}} ></div>
-                        <p class="mt-4 text-lg text-gray-900">{{$photo->description.', op datum: '.$photo->date}}</p>
+                        <p class="mt-4 text-lg text-gray-900">{{$photo->description}}</p>
+                        <p class="mt-4 text-lg text-gray-900">op datum: {{$photo->date}}</p> {{-- ->format('j M Y, g:i a') --}}
+                        <p class="mt-4 text-lg text-gray-900">Te koop voor: €{{$photo->price }}</p>
                     </div>
                 </div>
             @endforeach

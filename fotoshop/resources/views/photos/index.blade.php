@@ -7,11 +7,13 @@
                 placeholder="{{ __('Image description') }}"
                 class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
             >{{ old('decsription') }}</textarea>
+            <x-input-error :messages="$errors->get('description')" class="mt-2" />
             <input type="date"
                 name="date"
                 placeholder="{{ __('Image date') }}"
                 class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
             >{{ old('date') }}
+            <x-input-error :messages="$errors->get('date')" class="mt-2" />
 
         <div class="max-w-[18rem] mx-auto flex">
             <label for="currency-input" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Your Email</label>            
@@ -21,7 +23,7 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
                 </svg>
                 </div>
-                <input type="number" id="price" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Enter amount" required 
+                <input type="number" id="price" name="price" class="block p-2.5 w-full z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="Enter amount" required 
                     min="0.00"
                     step="0.50"
                 />
@@ -31,6 +33,7 @@
                 EUR 
             </div>
         </div>
+        <x-input-error :messages="$errors->get('price')" class="mt-2" />
             
                 
 
@@ -41,7 +44,7 @@
             >{{ old('filename') }}</textarea> --}}
             {{-- @csrf --}}
             <input type="file" name="file_upload">
-            <x-input-error :messages="$errors->get('message')" class="mt-2" />
+            <x-input-error :messages="$errors->get('file_upload')" class="mt-2" />
             <x-primary-button class="mt-4">{{ __('Store File') }}</x-primary-button>
         </form>
 
@@ -89,6 +92,7 @@
                         </div>
                         <img src={{$photo->filename}} >
                         <p class="mt-4 text-lg text-gray-900">{{$photo->description }}</p>
+                        <p class="mt-4 text-lg text-gray-900">Te koop voor: €{{$photo->price }}</p>
                     </div>
                 </div>
                 @endif
