@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="max-w-100 mx-auto p-4 sm:p-6 lg:p-8 gap-4">
         <div class="mt-6 shadow-sm rounded-lg divide-y flex flex-row flex-wrap justify-center">
-            @foreach ($photos as $photo)
+            @foreach ($basket as $photo)
                 <div class="max-w-96 mt-4 bg-white p-6 flex space-x-2 mx-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 -scale-x-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -44,13 +44,14 @@
                         <p class="mt-4 text-lg text-gray-900">op datum: {{$photo->date}}</p> {{-- ->format('j M Y, g:i a') --}}
                         <p class="mt-4 text-lg text-gray-900">Te koop voor: €{{$photo->price }}</p>
                         
-                        <form method="POST" action="{{ route('basket', $photo) }}">
+                        <form method="POST" action="{{ route('basket.update', $photo) }}">
                             @csrf
-                            <input type="number" id="quantity" name="quantity" class="block p-2.5 z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" value='1' required 
+                            <input type="number" id="quantity" name="quantity" class="block p-2.5 z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" 
+                                value={{$photo->pivot->quantity}} required 
                                 min="1"
                                 step="1"
                             />
-                            <x-primary-button class="mt-4">{{ __('Koop Foto') }}</x-primary-button>
+                            <x-primary-button class="mt-4">{{ __('Update aantal') }}</x-primary-button>
                         </form>
                     </div>
                 </div>

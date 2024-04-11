@@ -22,6 +22,10 @@ class Photo extends Model
     {
         return $this->belongsToMany(Order::class);
     }
+    public function baskets(): BelongsToMany
+    {
+        return $this->belongsToMany(Basket::class)->withPivot('quantity')->withTimestamps();
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
