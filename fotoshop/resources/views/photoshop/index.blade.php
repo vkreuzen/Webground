@@ -44,6 +44,7 @@
                         <p class="mt-4 text-lg text-gray-900">op datum: {{$photo->date}}</p> {{-- ->format('j M Y, g:i a') --}}
                         <p class="mt-4 text-lg text-gray-900">Te koop voor: €{{$photo->price }}</p>
                         
+                        @auth
                         <form method="POST" action="{{ route('basket', $photo) }}">
                             @csrf
                             <input type="number" id="quantity" name="quantity" class="block p-2.5 z-20 ps-10 text-sm text-gray-900 bg-gray-50 rounded-s-lg border-e-gray-50 border-e-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-e-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" value='1' required 
@@ -52,6 +53,7 @@
                             />
                             <x-primary-button class="mt-4">{{ __('Koop Foto') }}</x-primary-button>
                         </form>
+                        @endauth
                     </div>
                 </div>
             @endforeach

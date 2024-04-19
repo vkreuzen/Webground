@@ -17,7 +17,7 @@ class BasketController extends Controller
      */
     public function index()
     {
-        return view('baskets.index',['basket' => auth()->user()->basket->photos]);
+        return view('baskets.index',['basket' => auth()->user()->basket?->photos]);
     }
 
     /**
